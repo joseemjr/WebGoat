@@ -1,6 +1,5 @@
 package org.owasp.webgoat.lessons.deserialization;
 
-import org.owasp.webgoat.lessons.deserialization.InsecureDeserializationTask;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.ObjectInputStream;
@@ -21,12 +20,11 @@ public class SecureObjectInputStream extends ObjectInputStream {
   @Override
   protected Class<?> resolveClass(ObjectStreamClass osc) throws IOException, ClassNotFoundException {
 
-    List<String> approvedClasses = new ArrayList<String>();
+    List<String> approvedClasses = new ArrayList<>();
     approvedClasses.add(InsecureDeserializationTask.class.getName());
     approvedClasses.add("java.time.Ser");
 
     if (!approvedClasses.contains(osc.getName())) {
-        System.out.println("Attack Detected");
       throw new InvalidClassException("Unauthorized deserialization", osc.getName());
     }
 
