@@ -22,13 +22,7 @@
 
 package org.owasp.webgoat.lessons.deserialization;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InvalidClassException;
-import java.io.ObjectInputFilter;
-import java.io.ObjectInputStream;
-import java.util.Base64;
-import org.dummy.insecure.framework.VulnerableTaskHolder;
 import org.owasp.webgoat.container.assignments.AssignmentEndpoint;
 import org.owasp.webgoat.container.assignments.AssignmentHints;
 import org.owasp.webgoat.container.assignments.AttackResult;
@@ -54,6 +48,8 @@ public class InsecureDeserializationTask extends AssignmentEndpoint {
     int delay;
 
     b64token = token.replace('-', '+').replace('_', '/');
+
+    
 
     before = System.currentTimeMillis();
     after = System.currentTimeMillis();
