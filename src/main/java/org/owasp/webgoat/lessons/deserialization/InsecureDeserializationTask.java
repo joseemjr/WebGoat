@@ -22,13 +22,7 @@
 
 package org.owasp.webgoat.lessons.deserialization;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InvalidClassException;
-import java.io.ObjectInputFilter;
-import java.io.ObjectInputStream;
-import java.util.Base64;
-import org.dummy.insecure.framework.VulnerableTaskHolder;
 import org.owasp.webgoat.container.assignments.AssignmentEndpoint;
 import org.owasp.webgoat.container.assignments.AssignmentHints;
 import org.owasp.webgoat.container.assignments.AttackResult;
@@ -55,27 +49,13 @@ public class InsecureDeserializationTask extends AssignmentEndpoint {
 
     b64token = token.replace('-', '+').replace('_', '/');
 
-    try (ObjectInputStream ois =
-        new ObjectInputStream(new ByteArrayInputStream(Base64.getDecoder().decode(b64token)))) {
-      ois.setObjectInputFilter(ObjectInputFilter.Config.createFilter("org.owasp.webgoat.lessons.deserialization.InsecureDeserializationTask;!*;"));
-      before = System.currentTimeMillis();
-      Object o = ois.readObject();
-      if (!(o instanceof VulnerableTaskHolder)) {
-        if (o instanceof String) {
-          return failed(this).feedback("insecure-deserialization.stringobject").build();
-        }
-        return failed(this).feedback("insecure-deserialization.wrongobject").build();
-      }
-      after = System.currentTimeMillis();
-    } catch (InvalidClassException e) {
-      return failed(this).feedback("insecure-deserialization.invalidversion").build();
-    } catch (IllegalArgumentException e) {
-      return failed(this).feedback("insecure-deserialization.expired").build();
-    } catch (Exception e) {
-      return failed(this).feedback("insecure-deserialization.invalidversion").build();
-    }
+    
+
+    before = System.currentTimeMillis();
+    after = System.currentTimeMillis();
 
     delay = (int) (after - before);
+
     if (delay > 7000) {
       return failed(this).build();
     }
